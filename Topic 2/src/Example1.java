@@ -1,6 +1,7 @@
 public class Example1 {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
+        System.out.println("Testing the rectangle");
         Rectangle r1 = new Rectangle(20,10);
         Rectangle r2 = new Rectangle();
 

@@ -7,6 +7,7 @@ public abstract class Window extends JFrame {
 
     public JPanel panel;
 
+
     public Window(){
         this.title = "My Window";
         this.height = 500;
