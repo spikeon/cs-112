@@ -9,9 +9,9 @@
 
   Question 3:
   Add a buy method to the Product class.
-   This method will add the Product's price to a private, static variable.
-   Lastly, add a static getOrderTotal method to Product.
-   Make this method return the total of the order (i.e. the static variable).
+  This method will add the Product's price to a private, static variable.
+  Lastly, add a static getOrderTotal method to Product.
+  Make this method return the total of the order (i.e. the static variable).
 
  */
 public class Product {
