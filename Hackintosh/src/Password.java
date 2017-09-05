@@ -1,12 +1,17 @@
+import javax.activation.DataSource;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.*;
 
 public class Password {
     private String encrypted;
     private boolean found = false;
     private String unencrypted;
 
-    public Password (String encrypted){
+    private int id;
+
+    public Password (int id, String encrypted){
+        this.id = id;
         this.encrypted = encrypted;
     }
 
@@ -16,7 +21,7 @@ public class Password {
         return encrypted;
     }
 
-    private String encrypt(String potential){
+    public static String encrypt(String potential){
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.update(potential.getBytes());
@@ -33,11 +38,21 @@ public class Password {
     }
 
     public boolean check(String potential){
-        if(found) return false;
-        if(encrypt(potential).equals(encrypted)){
+        return !found && checkHash(encrypt(potential), potential);
+    }
+
+    public boolean checkHash(String hash, String potential){
+        if(hash.equals(encrypted)){
             found = true;
             this.unencrypted = potential;
-            System.out.println("Found Password: "+ potential );
+            System.out.println("Found Password: " + potential + " ( " + hash + " ) ");
+            Core.found(potential);
+            try {
+                PreparedStatement s = Core.conn.prepareStatement("UPDATE hashes SET password = ? WHERE id = ?");
+                s.setString(1, potential);
+                s.setInt(2, id);
+                s.execute();
+            } catch (SQLException e){ System.out.println("SQLException: " + e.getMessage());}
             return true;
         }
         return false;
