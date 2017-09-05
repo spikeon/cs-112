@@ -40,7 +40,8 @@ Temporary Items
 */.mtj.tmp/
 
 # Package Files #
-*.jar
+# I want my external libraries, thankyou very much
+# *.jar 
 *.war
 *.ear
 *.zip
