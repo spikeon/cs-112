@@ -8,10 +8,11 @@ import java.util.concurrent.Executors;
 public class Core implements Runnable {
     private static Passwords passwords = new Passwords();
 
-    public static int max = 10;
+    public static int max = 1;
+    public static int maxMax = 10;
     public static boolean[] lengths = {false, false, false, false, false, false, false, false, false, false};
     // public static Core me;
-    public static String[] alphanumeric = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","1","2","3","4","5","6","7","8","9","0"};
+    public static String[] alphanumeric = {"1","2","3","4","5","6","7","8","9","0","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
     private String current;
     public static long attempts = 0;
     public static long seconds = 0;
@@ -21,8 +22,8 @@ public class Core implements Runnable {
     public static Connection conn = null;
 
     public static void main(String[] args){
-
         service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
 
         if(conn == null){
             try{
@@ -43,13 +44,39 @@ public class Core implements Runnable {
             }
             catch (SQLException e){
                 System.out.println("SQLException: " + e.getMessage());
+                noMysql();
             }
         }
 
+        System.out.println("Changing max length to: " + max);
         service.submit(new Core());
-
         new Log();
+    }
 
+    public static void noMysql(){
+        System.out.println("No MySql Connection, loading all hashes");
+        passwords.add( 1,"333e0a1e27815d0ceee55c473fe3dc93d56c63e3bee2b3b4aee8eed6d70191a3");
+        passwords.add( 2,"d50aade27375357f547cd56c324fc12e877bcaf9665988766d9697cbdc435160");
+        passwords.add( 3,"0039d3f9dd3066199d77988be208de99c9b1e3441836fab2196f6918bf7033ad");
+        passwords.add( 4,"251803649b3bf23cfb1d7c787c1fae9c56922b1cf464b09058a54f319ded1519");
+        passwords.add( 5,"b7fb65a0e8cf832c6245a7a8fa2489b531085820b34cbd82ff0351f526348cf6");
+        passwords.add( 6,"ed8574126bbfe4264332111e435ca8f579004ee5c655f2190170333aa559bd41");
+        passwords.add( 7,"5e5f502dba30cc2abca534fbb1b7464d5c77c9b24a67bea1b7454d66e65c04d6");
+        passwords.add( 8,"ed399f0818f6de944d3b08221a89f5049aca31a27459d670bd521d36ee70106a");
+        passwords.add( 9,"68afef543c48dfd2679315c94676acc2111f988192b98bf4102f5ee24c3b4803");
+        passwords.add( 10,"69904d1f64b5bf321b5c01a066cf007728675ad72330be0ecd2c718e050dd2bf");
+    }
+
+    public static void refresh() {
+        System.out.println("Running Refresh");
+        if(service != null) service.shutdownNow();
+        while(lengthFound(max)) {
+            max++;
+            if (!(max <= maxMax)) return;
+        }
+        service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        System.out.println("Changing max length to: " + max);
+        service.submit(new Core());
     }
 
 
@@ -61,16 +88,18 @@ public class Core implements Runnable {
         this.current = current;
     }
 
-    public boolean lengthFound(int length){
+    public static boolean lengthFound(int length){
         if(length == 0) return true;
         return lengths[(length-1)];
     }
-    public boolean lengthFound(String s){
+    public static boolean lengthFound(String s){
         return lengthFound(s.length());
     }
 
     public static void found(String s){
+
         lengths[s.length()-1] = true;
+        refresh();
     }
 
     public void run() {
@@ -86,6 +115,5 @@ public class Core implements Runnable {
                 service.submit(new Core(current + a));
             }
         }
-
     }
 }
