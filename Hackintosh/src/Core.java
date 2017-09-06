@@ -18,13 +18,12 @@ public class Core implements Runnable {
     public static long seconds = 0;
     public static long instances = 0;
 
-    private static ExecutorService service;
     public static Connection conn = null;
 
     public static void main(String[] args){
-        service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
 
+/*
         if(conn == null){
             try{
                 conn = DriverManager.getConnection("jdbc:mysql://flynndev.us/hackintosh?user=root&password=7e8983abd51a92fb4249fa644bc359bf3aba7eb13d6222bb");
@@ -47,10 +46,11 @@ public class Core implements Runnable {
                 noMysql();
             }
         }
+        */
+        noMysql();
 
-        System.out.println("Changing max length to: " + max);
-        service.submit(new Core());
-        new Log();
+        //new Thread(new Log());
+        new CrackQueue();
     }
 
     public static void noMysql(){
@@ -69,14 +69,14 @@ public class Core implements Runnable {
 
     public static void refresh() {
         System.out.println("Running Refresh");
-        if(service != null) service.shutdownNow();
+        if(CrackQueue.service != null) CrackQueue.service.shutdownNow();
         while(lengthFound(max)) {
             max++;
             if (!(max <= maxMax)) return;
         }
-        service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        CrackQueue.service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         System.out.println("Changing max length to: " + max);
-        service.submit(new Core());
+        CrackQueue.add("");
     }
 
 
@@ -112,7 +112,7 @@ public class Core implements Runnable {
 
         if(current.length() + 1 <= max) {
             for (String a : alphanumeric) {
-                service.submit(new Core(current + a));
+                CrackQueue.add(current + a);
             }
         }
     }
