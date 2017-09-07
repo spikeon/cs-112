@@ -5,15 +5,13 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Core implements Runnable {
-    private static Passwords passwords = new Passwords();
+public class Core {
+    public static Passwords passwords = new Passwords();
 
-    public static int max = 1;
+    public static int max = 6;
     public static int maxMax = 10;
     public static boolean[] lengths = {false, false, false, false, false, false, false, false, false, false};
-    // public static Core me;
-    public static String[] alphanumeric = {"1","2","3","4","5","6","7","8","9","0","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-    private String current;
+
     public static long attempts = 0;
     public static long seconds = 0;
     public static long instances = 0;
@@ -50,7 +48,9 @@ public class Core implements Runnable {
         noMysql();
 
         //new Thread(new Log());
-        new CrackQueue();
+
+        Thread t = new Thread(new CrackQueue());
+        t.start();
     }
 
     public static void noMysql(){
@@ -80,18 +80,11 @@ public class Core implements Runnable {
     }
 
 
-    public Core () {
-        this.current = "";
-    }
-
-    public Core (String current){
-        this.current = current;
-    }
-
     public static boolean lengthFound(int length){
         if(length == 0) return true;
         return lengths[(length-1)];
     }
+
     public static boolean lengthFound(String s){
         return lengthFound(s.length());
     }
@@ -99,21 +92,8 @@ public class Core implements Runnable {
     public static void found(String s){
 
         lengths[s.length()-1] = true;
-        refresh();
+        //refresh();
     }
 
-    public void run() {
-        instances++;
 
-        if(!lengthFound(current)) {
-            attempts++;
-            passwords.check(current);
-        }
-
-        if(current.length() + 1 <= max) {
-            for (String a : alphanumeric) {
-                CrackQueue.add(current + a);
-            }
-        }
-    }
 }

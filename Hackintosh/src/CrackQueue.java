@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class CrackQueue {
+public class CrackQueue implements Runnable{
 
     volatile static boolean shutdown = false;
     private static boolean pause = false;
@@ -14,7 +14,10 @@ public class CrackQueue {
     public CrackQueue() {
         service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         //System.out.println("Queue Running");
-        service.submit(new Core());
+    }
+
+    public void run(){
+        service.submit(new Crack());
         while(!shutdown){
 
             try {
@@ -35,10 +38,11 @@ public class CrackQueue {
                 //pause = false;
 
                 for(String i : current){
-                    service.submit(new Core(i));
+                    service.submit(new Crack(i));
                 }
             }
         }
+
     }
 
     public static void add(String pw){
