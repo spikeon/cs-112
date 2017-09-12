@@ -21,6 +21,7 @@ public class Password {
     }
 
     public static String encrypt(String potential){
+        // Encrypt to: sha256
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.update(potential.getBytes());

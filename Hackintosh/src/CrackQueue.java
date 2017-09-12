@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class CrackQueue implements Runnable{
 
@@ -13,6 +14,7 @@ public class CrackQueue implements Runnable{
 
     public CrackQueue() {
         service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
         //System.out.println("Queue Running");
     }
 
@@ -25,10 +27,10 @@ public class CrackQueue implements Runnable{
             } catch(InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-            Core.seconds++;
+            Core.seconds+= 1;
             System.out.println("Checked " + Core.attempts + " ( " + Core.instances + " ) " + " passwords in " + Core.seconds + " seconds");
 
-            if(incoming.size() > 0) {
+            if(((ThreadPoolExecutor)service).getQueue().size() < 1000 && incoming.size() > 0) {
                 //System.out.println("Processing Queue");
 
                 // Ensure that we don't lose any items
@@ -38,7 +40,8 @@ public class CrackQueue implements Runnable{
                 //pause = false;
 
                 for(String i : current){
-                    service.submit(new Crack(i));
+                    if(((ThreadPoolExecutor)service).getQueue().size() < 1000) service.submit(new Crack(i));
+                    else incoming.add(i);
                 }
             }
         }
