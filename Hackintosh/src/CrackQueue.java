@@ -15,7 +15,7 @@ public class CrackQueue implements Runnable{
     private static ArrayList<String> incoming = new ArrayList<String>();
 
     public CrackQueue() {
-        service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
 
         //System.out.println("Queue Running");
     }
@@ -32,7 +32,7 @@ public class CrackQueue implements Runnable{
             Core.seconds+= 1;
             NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
             if(Core.seconds % 10 == 0)
-                System.out.println("Checked " + numberFormat.format(Core.attempts) + " ( " + numberFormat.format(Core.instances) + " ) " + " passwords in " + Core.seconds/10 + " seconds [ Q : " + numberFormat.format(((ThreadPoolExecutor) service).getQueue().size()) + " ] [ B : " + numberFormat.format(incoming.size()) + "]");
+                System.out.println("["+Crack.last+"]\t" + numberFormat.format(Core.attempts) + " : " + numberFormat.format(Core.instances) + "\t" + Core.seconds/10 + " sec\t[ Q : " + numberFormat.format(((ThreadPoolExecutor) service).getQueue().size()) + " ]\t[ B : " + numberFormat.format(incoming.size()) + "]");
 
             if(((ThreadPoolExecutor)service).getQueue().size() < 10000 && incoming.size() > 0) {
                 //System.out.println("Processing Queue");
