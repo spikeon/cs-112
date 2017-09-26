@@ -16,17 +16,27 @@ public class Crack implements Runnable{
   }
   public void run() {
     Core.instances++;
+    last = current;
 
     if(!Core.lengthFound(current)) {
       Core.attempts++;
       Core.passwords.check(current);
-      last = current;
     }
 
     if(current.length() + 1 <= Core.max) {
+
+      //while(CrackQueue.incoming.size() > 30000000){
+      //  try {
+      //    Thread.sleep(100);                 //1000 milliseconds is one second.
+      //  } catch(InterruptedException ex) {
+      //    Thread.currentThread().interrupt();
+      //  }
+      //}
+
       for (String a : alphanumeric) {
         CrackQueue.add(current + a);
       }
+
     }
   }
 }

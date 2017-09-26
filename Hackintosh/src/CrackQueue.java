@@ -11,13 +11,13 @@ public class CrackQueue implements Runnable{
     volatile static boolean shutdown = false;
     private static boolean pause = false;
 
+    private int queuesize = 1000000;
+
     public static ExecutorService service;
-    private static ArrayList<String> incoming = new ArrayList<String>();
+    public static ArrayList<String> incoming = new ArrayList<String>();
 
     public CrackQueue() {
         service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
-
-        //System.out.println("Queue Running");
     }
 
     public void run(){
@@ -31,10 +31,15 @@ public class CrackQueue implements Runnable{
             }
             Core.seconds+= 1;
             NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-            if(Core.seconds % 10 == 0)
-                System.out.println("["+Crack.last+"]\t" + numberFormat.format(Core.attempts) + " : " + numberFormat.format(Core.instances) + "\t" + Core.seconds/10 + " sec\t[ Q : " + numberFormat.format(((ThreadPoolExecutor) service).getQueue().size()) + " ]\t[ B : " + numberFormat.format(incoming.size()) + "]");
 
-            if(((ThreadPoolExecutor)service).getQueue().size() < 10000 && incoming.size() > 0) {
+            Core.currentTextField.setText(Crack.last);
+            Core.testedTextField.setText(numberFormat.format(Core.attempts));
+            Core.totalTextField.setText(numberFormat.format(Core.instances));
+            Core.secondsTextField.setText("" + Core.seconds / 10);
+            Core.queueTextField.setText(numberFormat.format(((ThreadPoolExecutor) service).getQueue().size()));
+            Core.bufferTextField.setText(numberFormat.format(incoming.size()));
+
+            if(((ThreadPoolExecutor)service).getQueue().size() < queuesize && incoming.size() > 0) {
                 //System.out.println("Processing Queue");
 
                 // Ensure that we don't lose any items
@@ -44,8 +49,8 @@ public class CrackQueue implements Runnable{
                 //pause = false;
                 looop :
                 {
-                    for (int i = 0; i <= 10000; i++) {
-                        if (incoming.size() > i && ((ThreadPoolExecutor) service).getQueue().size() < 10000) {
+                    for (int i = 0; i <= queuesize; i++) {
+                        if (incoming.size() > i && ((ThreadPoolExecutor) service).getQueue().size() < queuesize) {
                             service.submit(new Crack(incoming.get(i)));
                         } else {
                             pause = true;
@@ -65,7 +70,7 @@ public class CrackQueue implements Runnable{
         //System.out.println("Queue Received Password " + pw);
         while(pause){
             try {
-                Thread.sleep(1);                 //1000 milliseconds is one second.
+                Thread.sleep(10);                 //1000 milliseconds is one second.
             } catch(InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }

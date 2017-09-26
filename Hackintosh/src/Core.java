@@ -1,55 +1,33 @@
+import javax.swing.*;
 import javax.xml.transform.Result;
+import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Core {
+public class Core  extends JFrame {
     public static Passwords passwords = new Passwords();
 
-    public static int max = 4;
+    public static int max = 10;
     public static boolean[] lengths = {false, false, false, false, false, false, false, false, false, false};
 
     public static long attempts = 0;
     public static long seconds = 0;
     public static long instances = 0;
 
+    public static JTextField currentTextField = new JTextField(10);
+    public static JTextField testedTextField = new JTextField(20);
+    public static JTextField totalTextField = new JTextField(20);
+    public static JTextField secondsTextField = new JTextField(6);
+    public static JTextField queueTextField = new JTextField(10);
+    public static JTextField bufferTextField = new JTextField(20);
+
     public static Connection conn = null;
 
     public static void main(String[] args){
-
-
-/*
-        if(conn == null){
-            try{
-                conn = DriverManager.getConnection("jdbc:mysql://flynndev.us/hackintosh?user=root&password=7e8983abd51a92fb4249fa644bc359bf3aba7eb13d6222bb");
-                Statement stmt = conn.createStatement();
-                ResultSet resultSet = stmt.executeQuery("SELECT * FROM hashes");
-                while(resultSet.next()){
-                    if(resultSet.getString("password") == null){
-                        passwords.add(resultSet.getInt("id"), resultSet.getString("hash"));
-                        System.out.println("Loaded Hash: " + resultSet.getString("hash"));
-                    } else {
-                        found(resultSet.getString("password"));
-                        System.out.println("Password length already found: " + resultSet.getString("password").length());
-                    }
-                }
-                stmt.close();
-
-            }
-            catch (SQLException e){
-                System.out.println("SQLException: " + e.getMessage());
-                noMysql();
-            }
-        }
-        */
-        noMysql();
-
-        //new Thread(new Log());
-
-        Thread t = new Thread(new CrackQueue());
-        t.start();
+        new Core();
     }
 
     /*
@@ -95,5 +73,90 @@ ed399f0818f6de944d3b08221a89f5049aca31a27459d670bd521d36ee70106a
         //refresh();
     }
 
+    public Core(){
+/*
+        if(conn == null){
+            try{
+                conn = DriverManager.getConnection("jdbc:mysql://flynndev.us/hackintosh?user=root&password=7e8983abd51a92fb4249fa644bc359bf3aba7eb13d6222bb");
+                Statement stmt = conn.createStatement();
+                ResultSet resultSet = stmt.executeQuery("SELECT * FROM hashes");
+                while(resultSet.next()){
+                    if(resultSet.getString("password") == null){
+                        passwords.add(resultSet.getInt("id"), resultSet.getString("hash"));
+                        System.out.println("Loaded Hash: " + resultSet.getString("hash"));
+                    } else {
+                        found(resultSet.getString("password"));
+                        System.out.println("Password length already found: " + resultSet.getString("password").length());
+                    }
+                }
+                stmt.close();
+
+            }
+            catch (SQLException e){
+                System.out.println("SQLException: " + e.getMessage());
+                noMysql();
+            }
+        }
+*/
+        noMysql();
+
+        //new Thread(new Log());
+
+        Thread t = new Thread(new CrackQueue());
+        t.start();
+
+
+        // Set the title
+        setTitle("Cracker");
+
+        // Set size: X, Y
+        setSize(1000, 1000);
+
+        // Apps keep running even after you click close
+        // This will exit the program when you close it
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel passwordsPanel = new JPanel();
+        passwordsPanel.setLayout(new GridLayout(passwords.list.size() + 1, 3 ));
+
+        passwordsPanel.add(new JLabel("#"));
+        passwordsPanel.add(new JLabel("Hash"));
+        passwordsPanel.add(new JLabel("Found"));
+
+        for(Password p : passwords.list){
+            passwordsPanel.add(new JLabel("" + p.id));
+            passwordsPanel.add(new JTextField(p.getEncrypted()));
+            passwordsPanel.add(p.field);
+
+        }
+
+        JPanel statusPanel = new JPanel();
+        statusPanel.setLayout(new GridLayout(2, 6));
+
+        statusPanel.add(new JLabel("Current"));
+        statusPanel.add(new JLabel("Tested"));
+        statusPanel.add(new JLabel("Total"));
+        statusPanel.add(new JLabel("Seconds"));
+        statusPanel.add(new JLabel("Queue Size"));
+        statusPanel.add(new JLabel("Buffer Size"));
+
+        statusPanel.add(currentTextField);
+        statusPanel.add(testedTextField);
+        statusPanel.add(totalTextField);
+        statusPanel.add(secondsTextField);
+        statusPanel.add(queueTextField);
+        statusPanel.add(bufferTextField);
+
+        add(passwordsPanel, BorderLayout.NORTH);
+        add(new JSeparator(), BorderLayout.CENTER);
+        add(statusPanel, BorderLayout.SOUTH);
+
+        pack();
+
+
+        // Make this the last call in the constructor
+        // Components added to the JFrame after this call won't be visible
+        setVisible(true);
+    }
 
 }

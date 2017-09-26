@@ -1,18 +1,25 @@
 import javax.swing.*;
 
-public class Example2 extends Window {
+public class Example2 extends JFrame {
 
     public JButton button1;
     public JButton button2;
     public JButton button3;
     public JTextField textField;
+    public JPanel panel;
 
     public static void main(String[] args) {
         new Example2();
     }
 
     public Example2() {
-        super("My Window", 800, 100);
+        setTitle("Example 2");
+        setSize(800,100);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        panel = new JPanel();
+        buildPanel();
+        add(panel);
+        setVisible(true);
     }
 
     public void buildPanel(){

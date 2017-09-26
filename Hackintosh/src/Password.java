@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -6,8 +7,10 @@ public class Password {
     private String encrypted;
     private boolean found = false;
     private String unencrypted;
+    public JTextField field = new JTextField(10);
 
-    private int id;
+
+    public int id;
 
     public Password (int id, String encrypted){
         this.id = id;
@@ -46,13 +49,14 @@ public class Password {
             found = true;
             this.unencrypted = potential;
             System.out.println("Found Password: " + potential + " ( " + hash + " ) ");
+            this.field.setText(potential);
             Core.found(potential);
-            try {
-                PreparedStatement s = Core.conn.prepareStatement("UPDATE hashes SET password = ? WHERE id = ?");
-                s.setString(1, potential);
-                s.setInt(2, id);
-                s.execute();
-            } catch (SQLException e){ System.out.println("SQLException: " + e.getMessage());}
+            //try {
+            //    PreparedStatement s = Core.conn.prepareStatement("UPDATE hashes SET password = ? WHERE id = ?");
+            //    s.setString(1, potential);
+            //    s.setInt(2, id);
+            //    s.execute();
+            //} catch (SQLException e){ System.out.println("SQLException: " + e.getMessage());}
             return true;
         }
         return false;

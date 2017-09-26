@@ -1,8 +1,9 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Passwords {
-    private List<Password> list = new ArrayList<Password>();
+    public List<Password> list = new ArrayList<Password>();
 
     public void add(int id, Password p) {
         list.add(p);
