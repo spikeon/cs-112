@@ -1,13 +1,14 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Example3 extends Window {
+public class Example3 extends JFrame {
 
     public JButton button1;
     public JButton button2;
     public JButton button3;
-    public JLabel label1;
+    public JTextArea textarea1;
 
 
     public static void main(String[] args) {
@@ -15,11 +16,13 @@ public class Example3 extends Window {
     }
 
     public Example3() {
-        super("My Window", 800, 100);
-    }
 
-    public void buildPanel(){
-        label1 = new JLabel();
+        setTitle("My Window");
+        setSize(800, 800);
+
+        JPanel buttons = new JPanel();
+
+        textarea1 = new JTextArea();
 
         button1 = new JButton("Compliment 1");
         button2 = new JButton("Compliment 2");
@@ -29,15 +32,18 @@ public class Example3 extends Window {
         button2.addActionListener(new ComplimentListener(1));
         button3.addActionListener(new ComplimentListener(2));
 
-        panel.add(label1);
-        panel.add(button1);
-        panel.add(button2);
-        panel.add(button3);
+        add(textarea1, BorderLayout.NORTH);
+        buttons.add(button1);
+        buttons.add(button2);
+        buttons.add(button3);
+        add(buttons, BorderLayout.SOUTH);
+
+        setVisible(true);
     }
 
     private class ComplimentListener implements ActionListener {
         private int compliment;
-        private String[] compliments = {"1", "2", "3"};
+        private String[] compliments = {"You are Awesome", "That was a great click!", "I like your face!"};
 
         public ComplimentListener(int compliment){
             super();
@@ -45,7 +51,7 @@ public class Example3 extends Window {
         }
 
         public void actionPerformed(ActionEvent e){
-            label1.setText(label1.getText() + " " + compliments[compliment]);
+            textarea1.setText(textarea1.getText() + "\r\n" + compliments[compliment]);
         }
     }
 
