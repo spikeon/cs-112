@@ -5,12 +5,11 @@ import java.awt.event.ActionListener;
 public class MenuItem extends JButton {
   private String name;
   private double price;
-  private Receipt receipt;
-  public MenuItem(String name, double price, Receipt receipt){
+
+  public MenuItem(String name, double price){
     super(name);
     this.name = name;
     this.price = price;
-    this.receipt = receipt;
     addActionListener(new ClickListener());
   }
   private class ClickListener implements ActionListener {
@@ -20,7 +19,7 @@ public class MenuItem extends JButton {
     }
 
     public void actionPerformed(ActionEvent e){
-      receipt.addLine(name);
+      Example5.receipt.addLine(name);
     }
   }
 }
