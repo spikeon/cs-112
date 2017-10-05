@@ -55,6 +55,7 @@ public class MenuItem extends JButton {
     setFocusPainted(false);
     setContentAreaFilled(false);
     setBorder(BorderFactory.createEmptyBorder());
+
     addActionListener(new ClickListener());
   }
 
