@@ -10,11 +10,13 @@ import java.util.concurrent.Executors;
 public class Core  extends JFrame {
     public static Passwords passwords = new Passwords();
 
+    public static int length = 1;
     public static int max = 10;
     public static boolean[] lengths = {false, false, false, false, false, false, false, false, false, false};
 
     public static long attempts = 0;
-    public static long seconds = 0;
+    public static long startTime;
+    public static long seconds;
     public static long instances = 0;
 
     public static JTextField currentTextField = new JTextField(10);
@@ -23,6 +25,8 @@ public class Core  extends JFrame {
     public static JTextField secondsTextField = new JTextField(6);
     public static JTextField queueTextField = new JTextField(10);
     public static JTextField bufferTextField = new JTextField(20);
+
+    private static Thread t;
 
     public static Connection conn = null;
 
@@ -70,40 +74,23 @@ ed399f0818f6de944d3b08221a89f5049aca31a27459d670bd521d36ee70106a
     public static void found(String s){
 
         lengths[s.length()-1] = true;
-        //refresh();
+        if(length <= max) length++;
+        t.interrupt();
+        t = new Thread(new CrackQueue());
+        t.start();
+
+
     }
 
     public Core(){
-/*
-        if(conn == null){
-            try{
-                conn = DriverManager.getConnection("jdbc:mysql://flynndev.us/hackintosh?user=root&password=7e8983abd51a92fb4249fa644bc359bf3aba7eb13d6222bb");
-                Statement stmt = conn.createStatement();
-                ResultSet resultSet = stmt.executeQuery("SELECT * FROM hashes");
-                while(resultSet.next()){
-                    if(resultSet.getString("password") == null){
-                        passwords.add(resultSet.getInt("id"), resultSet.getString("hash"));
-                        System.out.println("Loaded Hash: " + resultSet.getString("hash"));
-                    } else {
-                        found(resultSet.getString("password"));
-                        System.out.println("Password length already found: " + resultSet.getString("password").length());
-                    }
-                }
-                stmt.close();
 
-            }
-            catch (SQLException e){
-                System.out.println("SQLException: " + e.getMessage());
-                noMysql();
-            }
-        }
-*/
+        this.startTime = (int) (System.currentTimeMillis() / 1000L);
+
         noMysql();
 
-        //new Thread(new Log());
-
-        Thread t = new Thread(new CrackQueue());
+        t = new Thread(new CrackQueue());
         t.start();
+
 
 
         // Set the title
