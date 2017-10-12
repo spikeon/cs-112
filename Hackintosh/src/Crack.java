@@ -8,50 +8,56 @@ public class Crack implements Runnable {
   private boolean propagate;
 
   public static String last;
-  public static String alphanumeric ="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  public static String alphanumeric = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-  public Crack(){
+  public Crack() {
     current = "";
     propagate = true;
   }
-  public Crack(boolean propagate){
+
+  public Crack(boolean propagate) {
     current = "";
     this.propagate = propagate;
   }
-  public Crack(String current){
+
+  public Crack(String current) {
     this.current = current;
     this.propagate = true;
   }
-  public Crack(String current, boolean propagate){
+
+  public Crack(String current, boolean propagate) {
     this.current = current;
     this.propagate = propagate;
   }
-  public Crack(String current[]){
-    for( String c : current){
-      if(this.current.equals("")) this.current = c;
+
+  public Crack(String current[]) {
+    for (String c : current) {
+      if (this.current.equals("")) this.current = c;
       else CrackQueue.add(c);
     }
     this.propagate = true;
   }
-  public Crack(String current[], boolean propagate){
-    for( String c : current){
-      if(this.current.equals("")) this.current = c;
+
+  public Crack(String current[], boolean propagate) {
+    for (String c : current) {
+      if (this.current.equals("")) this.current = c;
       else CrackQueue.add(c);
     }
     this.propagate = propagate;
   }
 
   public void run() {
+    while(!Core.run){}
 
     Core.instances++;
     last = current;
 
-    if(!Core.lengthFound(current)) {
+    if (!Core.lengthFound(current)) {
       Core.attempts++;
       Core.passwords.check(current);
     }
 
-    if(propagate) {
+    if (propagate) {
       if (current.length() + 1 <= Core.length) {
         for (char a : alphanumeric.toCharArray()) CrackQueue.add(current + a);
       }

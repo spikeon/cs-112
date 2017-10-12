@@ -5,49 +5,56 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class CrackQueue implements Runnable{
+public class CrackQueue implements Runnable {
 
-    private int queuesize = 1000000;
+  public static ExecutorService service;
+  public static Queue<Potential> incoming = new PriorityBlockingQueue<Potential>();
+  private int queuesize = 1000000;
+  private static int ctr = 0;
 
-    public static ExecutorService service;
-    public static Queue<Potential> incoming = new PriorityBlockingQueue<Potential>();
+  public CrackQueue() {
+    service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
+  }
 
-    public CrackQueue() {
-        service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1);
-    }
+  public static void add(String pw) {
+    //System.out.println("Queue Received Password " + pw);
+    incoming.add(new Potential(pw));
+  }
 
-    public void run(){
-        // Check all passwords
-        service.submit(new Crack());
+  public void run() {
+    while(!Core.run){}
 
-        // Check only certain passwords
-        // String[] passwords = {"cP3", "test", "123"};
-        // service.submit(new Crack(passwords, false));
+    // Check all passwords
+    service.submit(new Crack());
 
-        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    // Check only certain passwords
+    // String[] passwords = {"cP3", "test", "123"};
+    // service.submit(new Crack(passwords, false));
 
-        while(!Thread.currentThread().isInterrupted()) {
-            while(!incoming.isEmpty() && !Thread.currentThread().isInterrupted()) {
-                Potential current = incoming.poll();
+    NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    while (!Thread.currentThread().isInterrupted()) {
+      while (!incoming.isEmpty() && !Thread.currentThread().isInterrupted()) {
 
-                service.submit(new Crack(current.toString()));
+        while(!Core.run){}
 
-                Core.seconds = ((int) (System.currentTimeMillis() / 1000L) - Core.startTime);
+        ctr++;
 
-                Core.currentTextField.setText(current.toString());
-                Core.testedTextField.setText(numberFormat.format(Core.attempts));
-                Core.totalTextField.setText(numberFormat.format(Core.instances));
-                Core.secondsTextField.setText("" + Core.seconds);
-                Core.queueTextField.setText(numberFormat.format(((ThreadPoolExecutor) service).getQueue().size()));
-                Core.bufferTextField.setText(numberFormat.format(incoming.size()));
-                while(((ThreadPoolExecutor)service).getQueue().size() >= queuesize){ }
-            }
+        Potential current = incoming.poll();
+
+        service.submit(new Crack(current.toString()));
+
+        Core.seconds = ((int) (System.currentTimeMillis() / 1000L) - Core.startTime);
+        if(ctr > 1000) {
+          ctr = 0;
+          Core.currentTextField.setText(current.toString());
+          Core.testedTextField.setText(numberFormat.format(Core.attempts));
+          Core.totalTextField.setText(numberFormat.format(Core.instances));
+          Core.secondsTextField.setText("" + Core.getSeconds());
+          Core.queueTextField.setText(numberFormat.format(((ThreadPoolExecutor) service).getQueue().size()));
+          Core.bufferTextField.setText(numberFormat.format(incoming.size()));
         }
+        while (((ThreadPoolExecutor) service).getQueue().size() >= queuesize) {}
+      }
     }
-
-    public static void add(String pw){
-        //System.out.println("Queue Received Password " + pw);
-        incoming.add(new Potential(pw));
-    }
-
+  }
 }
