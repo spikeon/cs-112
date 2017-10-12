@@ -8,8 +8,15 @@ public class Item extends JButton {
   private boolean set = false;
 
   public Item(PositionX x, PositionY y) {
+    super("");
+    addActionListener(new ClickListener());
     this.x = x;
     this.y = y;
+  }
+
+  public void reset(){
+    this.set = false;
+    setText("");
   }
 
   public PositionX getPositionX(){
@@ -23,7 +30,10 @@ public class Item extends JButton {
   private class ClickListener implements ActionListener {
     public ClickListener(){ super(); }
     public void actionPerformed(ActionEvent e){
+      if(set) return;
+      if(!TicTacToe.running) return;
       set = true;
-
+      setText(TicTacToe.getNext());
+      TicTacToe.checkState();
     }
   }}
