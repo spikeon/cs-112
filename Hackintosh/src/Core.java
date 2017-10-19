@@ -32,6 +32,8 @@ public class Core extends JFrame {
   public static Connection conn = null;
   private static Thread t;
 
+  public static boolean gui = false;
+
   public Core() {
 
     if(incrementMode) {
@@ -48,60 +50,64 @@ public class Core extends JFrame {
     t = new Thread(new CrackQueue());
     t.start();
 
+    if(gui) {
 
-    // Set the title
-    setTitle("Cracker");
+      // Set the title
+      setTitle("Cracker");
 
-    // Set size: X, Y
-    setSize(1000, 1000);
+      // Set size: X, Y
+      setSize(1000, 1000);
 
-    // Apps keep running even after you click close
-    // This will exit the program when you close it
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      // Apps keep running even after you click close
+      // This will exit the program when you close it
+      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    JPanel passwordsPanel = new JPanel();
-    passwordsPanel.setLayout(new GridLayout(passwords.list.size() + 1, 4));
+      JPanel passwordsPanel = new JPanel();
+      passwordsPanel.setLayout(new GridLayout(passwords.list.size() + 1, 4));
 
-    passwordsPanel.add(new JLabel("#"));
-    passwordsPanel.add(new JLabel("Hash"));
-    passwordsPanel.add(new JLabel("Found"));
-    passwordsPanel.add(new JLabel("Seconds To Find"));
+      passwordsPanel.add(new JLabel("#"));
+      passwordsPanel.add(new JLabel("Hash"));
+      passwordsPanel.add(new JLabel("Found"));
+      passwordsPanel.add(new JLabel("Seconds To Find"));
 
-    for (Password p : passwords.list) {
-      passwordsPanel.add(new JLabel("" + p.id));
-      passwordsPanel.add(new JTextField(p.getEncrypted()));
-      passwordsPanel.add(p.field);
-      passwordsPanel.add(p.seconds);
+      for (Password p : passwords.list) {
+        passwordsPanel.add(new JLabel("" + p.id));
+        passwordsPanel.add(new JTextField(p.getEncrypted()));
+        passwordsPanel.add(p.field);
+        passwordsPanel.add(p.seconds);
+      }
+
+      JPanel statusPanel = new JPanel();
+      statusPanel.setLayout(new GridLayout(2, 6));
+
+      statusPanel.add(new JLabel("Current"));
+      statusPanel.add(new JLabel("Tested"));
+      statusPanel.add(new JLabel("Total"));
+      statusPanel.add(new JLabel("Seconds"));
+      statusPanel.add(new JLabel("Queue Size"));
+      statusPanel.add(new JLabel("Buffer Size"));
+
+      statusPanel.add(currentTextField);
+      statusPanel.add(testedTextField);
+      statusPanel.add(totalTextField);
+      statusPanel.add(secondsTextField);
+      statusPanel.add(queueTextField);
+      statusPanel.add(bufferTextField);
+
+      add(statusPanel, BorderLayout.NORTH);
+      add(passwordsPanel, BorderLayout.CENTER);
+      button = new JButton("Start");
+      button.addActionListener(new ClickListener());
+      add(button, BorderLayout.SOUTH);
+      pack();
+
+
+      // Make this the last call in the constructor
+      // Components added to the JFrame after this call won't be visible
+      setVisible(true);
+    } else {
+      run = true;
     }
-
-    JPanel statusPanel = new JPanel();
-    statusPanel.setLayout(new GridLayout(2, 6));
-
-    statusPanel.add(new JLabel("Current"));
-    statusPanel.add(new JLabel("Tested"));
-    statusPanel.add(new JLabel("Total"));
-    statusPanel.add(new JLabel("Seconds"));
-    statusPanel.add(new JLabel("Queue Size"));
-    statusPanel.add(new JLabel("Buffer Size"));
-
-    statusPanel.add(currentTextField);
-    statusPanel.add(testedTextField);
-    statusPanel.add(totalTextField);
-    statusPanel.add(secondsTextField);
-    statusPanel.add(queueTextField);
-    statusPanel.add(bufferTextField);
-
-    add(statusPanel, BorderLayout.NORTH);
-    add(passwordsPanel, BorderLayout.CENTER);
-    button = new JButton("Start");
-    button.addActionListener(new ClickListener());
-    add(button, BorderLayout.SOUTH);
-    pack();
-
-
-    // Make this the last call in the constructor
-    // Components added to the JFrame after this call won't be visible
-    setVisible(true);
   }
 
     /*
