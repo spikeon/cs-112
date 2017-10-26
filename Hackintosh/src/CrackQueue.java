@@ -46,7 +46,7 @@ public class CrackQueue implements Runnable {
         if(Core.gui) {
 
           Core.seconds = ((int) (System.currentTimeMillis() / 1000L) - Core.startTime);
-          if (ctr > 1000) {
+          if (ctr > 100000) {
             ctr = 0;
             Core.currentTextField.setText(current.toString());
             Core.testedTextField.setText(numberFormat.format(Core.attempts));
@@ -55,6 +55,14 @@ public class CrackQueue implements Runnable {
             Core.queueTextField.setText(numberFormat.format(((ThreadPoolExecutor) service).getQueue().size()));
             Core.bufferTextField.setText(numberFormat.format(incoming.size()));
           }
+        }
+        else {
+          if (ctr > 10000000) {
+            ctr = 0;
+            // Status Output
+            System.out.println("[length:"+ Core.length +"] [tested:" + numberFormat.format(Core.attempts) + "] [total:" + numberFormat.format(Core.instances) + "] [last:"+current.toString()+"]");
+          }
+
         }
 
         while (((ThreadPoolExecutor) service).getQueue().size() >= queuesize) {}

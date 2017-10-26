@@ -71,25 +71,28 @@ public class MyLinkedList<E> {
   public boolean contains(E element){
     return indexOf(element) != -1;
   }
+
   public boolean isEmpty(){
     return head == null;
   }
+
   public void add(int index, E element){
     // Not Working 
     Node<E> tmp = head;
 
-    while(index >= size()){
-      addLast(null);
-    }
+    //while(index >= size()){
+    //  addLast(null);
+    //}
     if(index == 0) addFirst(element);
     else {
-      for (int i = 1; i <= index; i++) {
-        tmp = tmp.next;
+      for (int i = 0; i < index - 1; i++) {
+        if(tmp.next != null) tmp = tmp.next;
       }
       tmp.next = new Node<E>(element, tmp.next);
     }
 
   }
+
   public E set(int index, E element){
     Node<E> tmp = head;
     for(int i = 0; i < index; i++){
@@ -99,6 +102,28 @@ public class MyLinkedList<E> {
     tmp.data = element;
     return r;
 
+  }
+
+  public boolean remove(E element){
+    if(!contains(element)) return false;
+    remove(indexOf(element));
+    return true;
+  }
+  public E remove(int index){
+    Node<E> tmp = head;
+    Node<E> prev = head;
+
+    if(index == 0){
+      head = tmp.next;
+      return tmp.data;
+    }
+
+    for(int i = 1; i <= index; i++){
+      prev = tmp;
+      tmp = tmp.next;
+    }
+    prev.next = tmp.next;
+    return tmp.data;
   }
 
 }

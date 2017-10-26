@@ -6,9 +6,7 @@ import java.util.List;
 public class Crack implements Runnable {
   private String current = "";
   private boolean propagate;
-
   public static String last;
-  public static String alphanumeric = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
   public Crack() {
     current = "";
@@ -59,10 +57,7 @@ public class Crack implements Runnable {
 
     if (propagate) {
       if (current.length() + 1 <= Core.length) {
-        // for (char a : alphanumeric.toCharArray()) CrackQueue.add(current + a);
-        for( int i = 32; i <= 126; i++ ) {
-          CrackQueue.add(current + (char) i);
-        }
+        for( int i = 32; i <= 126; i++ ) CrackQueue.add(current + (char) i);
       }
     }
   }

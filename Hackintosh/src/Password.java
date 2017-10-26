@@ -33,30 +33,17 @@ public class Password {
     }
   }
 
-  private String simplify(String encrypted) {
-    // If we can reverse engineer the encrypted string to something that takes less steps to encrypt, do it here
-
-    return encrypted;
-  }
-
-  public boolean check(String potential) {
-    return !found && checkHash(encrypt(potential), potential);
-  }
-
   public boolean checkHash(String hash, String potential) {
     if (hash.equals(encrypted)) {
       found = true;
-      this.unencrypted = potential;
-      System.out.println("Found Password: " + potential + " ( " + hash + " ) ");
-      this.field.setText(potential);
-      this.seconds.setText("" + Core.seconds);
-      Core.found(potential);
-      //try {
-      //    PreparedStatement s = Core.conn.prepareStatement("UPDATE hashes SET password = ? WHERE id = ?");
-      //    s.setString(1, potential);
-      //    s.setInt(2, id);
-      //    s.execute();
-      //} catch (SQLException e){ System.out.println("SQLException: " + e.getMessage());}
+      unencrypted = potential;
+      if(Core.gui) {
+        this.field.setText(unencrypted);
+        this.seconds.setText("" + Core.seconds);
+      } else {
+        System.out.println("Found Password: " + potential + " ( " + hash + " ) [seconds:" + Core.seconds + "]");
+      }
+      Core.found(unencrypted);
       return true;
     }
     return false;
@@ -66,23 +53,7 @@ public class Password {
     return encrypted;
   }
 
-  public void setEncrypted(String encrypted) {
-    this.encrypted = encrypted;
-  }
-
   public boolean isFound() {
     return found;
-  }
-
-  public void setFound(boolean found) {
-    this.found = found;
-  }
-
-  public String getUnencrypted() {
-    return unencrypted;
-  }
-
-  public void setUnencrypted(String unencrypted) {
-    this.unencrypted = unencrypted;
   }
 }
