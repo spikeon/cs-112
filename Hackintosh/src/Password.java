@@ -16,6 +16,13 @@ public class Password {
     this.encrypted = encrypted;
   }
 
+  public Password(int id, String encrypted, String found) {
+    this.id = id;
+    this.encrypted = encrypted;
+    checkHash(encrypt(found), found);
+  }
+
+
   public static String encrypt(String potential) {
     // Encrypt to: sha256
     try {

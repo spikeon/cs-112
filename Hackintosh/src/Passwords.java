@@ -9,6 +9,10 @@ public class Passwords {
     list.add(new Password(id, hash));
   }
 
+  public void add(int id, String hash, String found) {
+    list.add(new Password(id, hash, found));
+  }
+
   public boolean check(String pw) {
     boolean flag = false;
     String hash = Password.encrypt(pw);

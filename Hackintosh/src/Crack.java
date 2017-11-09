@@ -57,7 +57,7 @@ public class Crack implements Runnable {
 
     if (propagate) {
       if (current.length() + 1 <= Core.length) {
-        for( int i = 32; i <= 126; i++ ) CrackQueue.add(current + (char) i);
+        for( int i = 33; i <= 126; i++ ) CrackQueue.add(current + (char) i);
       }
     }
   }
