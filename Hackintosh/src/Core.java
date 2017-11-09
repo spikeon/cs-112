@@ -31,7 +31,7 @@ public class Core extends JFrame {
   public static JButton button;
   private static Thread t;
 
-  public static boolean gui = true;
+  public static boolean gui = false;
 
   public Core() {
 

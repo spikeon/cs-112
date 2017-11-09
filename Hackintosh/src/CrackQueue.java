@@ -9,7 +9,7 @@ public class CrackQueue implements Runnable {
 
   public static ExecutorService service;
   public static Queue<Potential> incoming = new PriorityBlockingQueue<Potential>();
-  private int queuesize = 1000000;
+  private int queuesize = 10000000;
   private static int ctr = 0;
 
   public CrackQueue() {
@@ -65,7 +65,7 @@ public class CrackQueue implements Runnable {
 
         }
 
-        while (((ThreadPoolExecutor) service).getQueue().size() >= queuesize) {}
+        //while (((ThreadPoolExecutor) service).getQueue().size() >= queuesize) {}
       }
     }
   }
