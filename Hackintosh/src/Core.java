@@ -65,7 +65,7 @@ public class Core extends JFrame {
     passwords.add(5,  "99914592d33e5ad12d31e9dd4080fc6560b8395e7ce8e76e90824ce0c3b8cc9e","By3!!");
     passwords.add(6,  "5588556e423b12300798a21abd02130e477f72899cbd5d858929f9a769083ee7","L#t3R~");
     passwords.add(7,  "2b3194bf8211b36d91466501dbf70d1da3e7ab97b048db5e333287b05f2264ff","%@h8&mb");
-    passwords.add(8,  "25df7e3069d3907ab93b2c12b0d588cf20db1f758744336bb9eaf5c359af42b4");
+    passwords.add(8,  "25df7e3069d3907ab93b2c12b0d588cf20db1f758744336bb9eaf5c359af42b4", "octorokZ");
     passwords.add(9,  "555d536c422c9bb89f51fa299bcf323febe4d5d6eba36df47042a54f92027f10");
     passwords.add(10, "f1afeb300c88583c77c2f1e568d3a6013b42333f7e650b9a48d6364dd76e83de");
 
